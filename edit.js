@@ -1,10 +1,3 @@
-
-// let turndownService = new TurndownService({
-//     'headingStyle': 'atx',
-//     'codeBlockStyle': 'fenced',
-//     'fence': '```'
-// })
-
 marked.setOptions({
     headerIds: false,
     highlight: function(code, lang) {
