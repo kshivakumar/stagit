@@ -9,9 +9,10 @@ window.onload = () => {
   loadPosts()
 }
 
+const SUBPATH = location.pathname == '/stagit/' ? '/stagit' : ''
+
 function loadPosts() {
-  let subPath = location.pathname == '/stagit/' ? '/stagit' : '' 
-  fetch(location.origin + subPath + '/posts.json')
+  fetch(location.origin + SUBPATH + '/posts.json')
   .then(response => response.json())
   .then(data => {
     let posts = data
@@ -25,7 +26,7 @@ function loadPosts() {
 }
 
 function loadPost(post) {
-  let url = location.origin + '/posts/' + post + '.md'
+  let url = location.origin + SUBPATH + '/posts/' + post + '.md'
 
   fetch(url)
   .then(response => response.text())
