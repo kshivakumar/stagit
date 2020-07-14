@@ -10,11 +10,11 @@ window.onload = () => {
 }
 
 function loadPosts() {
-  fetch(location.origin + '/posts.json')
+  let subPath = location.pathname == '/stagit/' ? '/stagit' : '' 
+  fetch(location.origin + subPath + '/posts.json')
   .then(response => response.json())
   .then(data => {
     let posts = data
-    console.log(posts)
     for (post of Object.keys(posts).reverse()) {
       loadPost(post)
     }

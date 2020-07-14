@@ -16,7 +16,8 @@ window.onload = () => {
 }
 
 function loadView() {
-    fetch(location.origin + '/posts/' + '20201128.md')
+    let subPath = location.pathname == '/stagit/' ? '/stagit' : '' 
+    fetch(location.origin + subPath + '/posts/' + '20201128.md')
     .then(response => response.text())
     .then(text => {
         document.getElementById('markdown-side').value = text
