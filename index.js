@@ -23,6 +23,7 @@ function loadPost(post) {
   fetch(url)
   .then(response => response.text())
   .then(text => {
+    
     let main = document.getElementById("main-content")
     main.insertAdjacentHTML(main.childNodes ? 'beforeend' : 'afterbegin', text)
 
