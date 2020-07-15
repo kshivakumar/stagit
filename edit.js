@@ -16,7 +16,7 @@ window.onload = () => {
 }
 
 function loadView() {
-    let subPath = location.pathname == '/stagit/' ? '/stagit' : '' 
+    let subPath = location.pathname == '/stagit/edit' ? '/stagit' : '' 
     fetch(location.origin + subPath + '/posts/' + '20201128.md')
     .then(response => response.text())
     .then(text => {
@@ -36,3 +36,4 @@ function saveChanges() {
     let md = document.getElementById('markdown-side')
     console.log(md.value)
 }
+
