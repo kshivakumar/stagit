@@ -1,52 +1,75 @@
 import http from 'https://unpkg.com/isomorphic-git/http/web/index.js'
 
-window.fs = new LightningFS('fs')
-window.dir = '/tutorial'
 
-fs.mkdir(dir, console.log);
+const fetchConfig = async () => fetch('./config.json').then(r => r.json()).catch(err => err)
 
-fs.readdir(dir, (...args) => console.log('After mkdir', args));
 
-git.clone({
-fs,
-http,
-dir,
-corsProxy: 'https://cors.isomorphic-git.org',
-url: 'https://github.com/kshivakumar/stagit.git',
-ref: 'master',
-singleBranch: true,
-depth: 10
-});
-git.log({fs, dir})
-let status = git.status({fs, dir, filepath: 'README.md'})
-status.then(d => console.log(d))
-fs.readdir(dir, (...args) => console.log('After git.status', args));
+export async function addPost(title, content, commitMessage, authorEmail) {
+  let config
+  try {
+    config = await fetchConfig()
+    console.log(config)
+    const [fs, pfs, dir] = await init(config)
+    
+    const filePath = `posts/${title.toLowerCase().replace(' ', '_')}.md`
+    pfs.writeFile(`${dir}/${filePath}`, `${content}`, 'utf8')
+    await git.add({fs, dir, filepath: filePath})
 
-// fs.writeFile(`${dir}/testfile.txt`, 'Hello World', 'utf8', console.log)
+    if (!commitMessage) commitMessage = `Added post '${title}'`
+    await gitCommit(commitMessage, 'Shiva Kumar', authorEmail)
+  
+    let token = 'abcdef' // Take input from user
+    await gitPush(authorEmail, token)
+    
+  } catch(err) {
+    console.error('Something went boom!!', err)
+  }
+}
 
-// git.add({fs, dir, filepath: 'testfile.txt'})
+export function updatePost(postId, content) {
+  
+}
 
-// git.status({fs, dir, filepath: 'testfile.txt'}).then(s => console.log(s))
-console.log('Trying to commit')
-let sha = git.commit({
+async function init(config) {
+  window.fs = new LightningFS('fs', {wipe: 'clean'})
+  window.pfs = window.fs.promises
+  
+  window.dir = '/working'
+  await pfs.mkdir(dir);
+
+  await git.clone({
+    fs,
+    http,
+    dir,
+    corsProxy: config.corsProxy,
+    url: config.repo,
+    ref: 'master',
+    singleBranch: true,
+    depth: 10
+  })
+  return [fs, pfs, dir]
+}
+
+async function gitCommit(message, name, email) {
+  await git.commit({
     fs,
     dir,
-    message: 'Add testfile.txt',
+    message,
     author: {
-      name: 'kshivakumar',
-      email: 'kshivakumar@outlook.com'
+      name,
+      email
     }
-  }, console.log)
-  console.log('asasf')
-  console.log(Object.keys(sha))
-  
-console.log('Committing')
-  git.push({
+  })
+}
+
+async function gitPush(username, accessToken) {
+  await git.push({
     http,
     fs,
     dir,
     onAuth: () => ({
-      username: 'kshivakumar', 
-      password: 'password/token', // can be taken as input from the user
-    }),
+      username,
+      password: accessToken
+    })
   })
+}

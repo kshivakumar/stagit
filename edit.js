@@ -1,3 +1,5 @@
+import {addPost, updatePost} from './git.js'
+
 marked.setOptions({
     headerIds: false,
     highlight: function(code, lang) {
@@ -34,6 +36,7 @@ function editing(args) {
 
 function saveChanges() {
     let md = document.getElementById('markdown-side')
-    console.log(md.value)
+    let title=  document.getElementById('postTitle').value
+    let authorEmail = document.getElementById('authorEmail').value
+    addPost(title, md.value, '', authorEmail)
 }
-

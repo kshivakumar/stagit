@@ -1,0 +1,11 @@
+{
+    "repo": "https://github.com/kshivakumar/stagit.git",
+    "authors": [
+        {
+            "username": "kshivakumar",
+            "name": "Shiva Kumar",
+            "useUsernameForCommit": true
+        }
+    ],
+    "corsProxy": "https://cors.isomorphic-git.org"
+}
